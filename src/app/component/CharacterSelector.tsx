@@ -15,14 +15,15 @@ const Character = ({ character }) => {
   }));
 
   return (
-    <div ref={drag} className="m-2 cursor-pointer">
-      <img src={character.imageUrl} alt={character.name} className="w-20 h-20 object-contain" />
+    <div ref={drag} className="m-2 cursor-pointer transform transition-transform hover:scale-105">
+      <img src={character.imageUrl} alt={character.name} className="w-20 h-20 object-contain rounded-lg shadow-lg" />
+      <p className="text-center mt-2 text-sm font-semibold">{character.name}</p>
     </div>
   );
 };
 
 const CharacterSelector = () => (
-  <div className="flex flex-wrap w-1/4 bg-gray-100 p-4 border-r">
+  <div className="flex flex-wrap w-1/4 bg-gray-100 p-4 border-r border-gray-300 overflow-y-auto h-screen">
     {characters.map((char) => (
       <Character key={char.id} character={char} />
     ))}

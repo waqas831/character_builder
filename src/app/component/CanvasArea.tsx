@@ -51,7 +51,7 @@ const CanvasArea = ({ droppedItems, setDroppedItems }) => {
         ref={canvasRef}
         width={800}
         height={600}
-        className="border-2 border-gray-500"
+        className="border-2 border-gray-500 rounded-lg shadow-lg"
       ></canvas>
     </div>
   );
