@@ -1,8 +1,8 @@
-const DownloadButton = ({ canvasRef }) => {
+const DownloadButton = ({ canvasRef }:any) => {
     const handleDownload = () => {
-      const canvas = canvasRef.current;
-      const image = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
+      const canvas:any = canvasRef.current;
+      const image :any= canvas.toDataURL('image/png');
+      const link :any= document.createElement('a');
       link.href = image;
       link.download = 'meme-master.png';
       link.click();

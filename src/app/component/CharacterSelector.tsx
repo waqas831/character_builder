@@ -8,8 +8,8 @@ const characters = [
   // Add more characters as needed
 ];
 
-const Character = ({ character }) => {
-  const [, drag] = useDrag(() => ({
+const Character = ({ character }:any) => {
+  const [, drag]:any = useDrag(() => ({
     type: 'character',
     item: { id: character.id, imageUrl: character.imageUrl },
   }));
@@ -24,7 +24,7 @@ const Character = ({ character }) => {
 
 const CharacterSelector = () => (
   <div className="flex flex-wrap w-1/4 bg-gray-100 p-4 border-r border-gray-300 overflow-y-auto h-screen">
-    {characters.map((char) => (
+    {characters?.map((char) => (
       <Character key={char.id} character={char} />
     ))}
   </div>

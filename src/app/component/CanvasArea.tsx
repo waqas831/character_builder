@@ -1,33 +1,50 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
-import { useDrop } from 'react-dnd';
+import { useDrop, XYCoord } from 'react-dnd';
 
-const CanvasArea = ({ droppedItems, setDroppedItems }) => {
-  const canvasRef = useRef(null);
-  const [selectedItem, setSelectedItem] = useState(null);
+interface DroppedItem {
+  id: string;
+  imageUrl: string;
+  x: number;
+  y: number;
+}
 
-  const [, drop] = useDrop({
+interface CanvasAreaProps {
+  droppedItems: DroppedItem[];
+  setDroppedItems: React.Dispatch<React.SetStateAction<DroppedItem[]>>;
+}
+
+const CanvasArea: React.FC<any> = ({ droppedItems, setDroppedItems }) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [selectedItem, setSelectedItem] = useState<DroppedItem | null>(null);
+
+  const [, drop]:any = useDrop({
     accept: 'character',
-    drop: (item, monitor) => {
-      const offset = monitor.getClientOffset();
-      const canvas = canvasRef.current;
-      const rect = canvas.getBoundingClientRect();
-      const x = offset.x - rect.left;
-      const y = offset.y - rect.top;
-      setDroppedItems((prevItems) => [
-        ...prevItems,
-        { ...item, x, y },
-      ]);
+    drop: (item: DroppedItem, monitor) => {
+      const offset: XYCoord | null = monitor.getClientOffset();
+      if (offset && canvasRef.current) {
+        const canvas = canvasRef.current;
+        const rect = canvas.getBoundingClientRect();
+        const x = offset.x - rect.left;
+        const y = offset.y - rect.top;
+
+        setDroppedItems((prevItems:any) => [
+          ...prevItems,
+          { ...item, x, y },
+        ]);
+      }
     },
   });
 
-  const handleMouseDown = (e) => {
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
+
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
     const item = droppedItems.find(
-      (item) => x >= item.x && x <= item.x + 50 && y >= item.y && y <= item.y + 50
+      (item:any) => x >= item.x && x <= item.x + 50 && y >= item.y && y <= item.y + 50
     );
 
     if (item) {
@@ -35,16 +52,18 @@ const CanvasArea = ({ droppedItems, setDroppedItems }) => {
     }
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!selectedItem) return;
 
     const canvas = canvasRef.current;
+    if (!canvas) return;
+
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    setDroppedItems((prevItems) =>
-      prevItems.map((item) =>
+    setDroppedItems((prevItems:any) =>
+      prevItems.map((item:any) =>
         item.id === selectedItem.id ? { ...item, x, y } : item
       )
     );
@@ -54,36 +73,42 @@ const CanvasArea = ({ droppedItems, setDroppedItems }) => {
     setSelectedItem(null);
   };
 
-  const handleDoubleClick = (e) => {
+  const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
+
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    setDroppedItems((prevItems) =>
+    setDroppedItems((prevItems:any) =>
       prevItems.filter(
-        (item) => !(x >= item.x && x <= item.x + 50 && y >= item.y && y <= item.y + 50)
+        (item:any) => !(x >= item.x && x <= item.x + 50 && y >= item.y && y <= item.y + 50)
       )
     );
   };
 
   const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
+
     const context = canvas.getContext('2d');
+    if (!context) return;
+
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     // Load default image
     const defaultImg = new Image();
-    defaultImg.src = 'https://cdn.decrypt.co/wp-content/uploads/2023/05/dogecoin-doge-token-digital-rendering-gID_7.jpg'; // Replace with your default image URL
+    defaultImg.src = 'https://cdn.decrypt.co/wp-content/uploads/2023/05/dogecoin-doge-token-digital-rendering-gID_7.jpg';
     defaultImg.onload = () => {
-      context.drawImage(defaultImg, 0, 0, canvas.width, canvas.height); // Adjust position and size as needed
+      context.drawImage(defaultImg, 0, 0, canvas.width, canvas.height);
 
-      // Draw dropped items after the default image has loaded
-      droppedItems.forEach((item) => {
+      // Draw dropped items
+      droppedItems.forEach((item:any) => {
         const img = new Image();
         img.src = item.imageUrl;
         img.onload = () => {
-          context.drawImage(img, item.x, item.y, 50, 50); // Adjust size as needed
+          context.drawImage(img, item.x, item.y, 50, 50);
         };
       });
     };
