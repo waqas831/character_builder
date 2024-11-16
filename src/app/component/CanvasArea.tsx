@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { useDrop } from 'react-dnd';
 
 const CanvasArea = ({ droppedItems, setDroppedItems }) => {
   const canvasRef = useRef(null);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const [, drop] = useDrop({
     accept: 'character',
@@ -19,6 +20,53 @@ const CanvasArea = ({ droppedItems, setDroppedItems }) => {
     },
   });
 
+  const handleMouseDown = (e) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const item = droppedItems.find(
+      (item) => x >= item.x && x <= item.x + 50 && y >= item.y && y <= item.y + 50
+    );
+
+    if (item) {
+      setSelectedItem(item);
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    if (!selectedItem) return;
+
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    setDroppedItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === selectedItem.id ? { ...item, x, y } : item
+      )
+    );
+  };
+
+  const handleMouseUp = () => {
+    setSelectedItem(null);
+  };
+
+  const handleDoubleClick = (e) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    setDroppedItems((prevItems) =>
+      prevItems.filter(
+        (item) => !(x >= item.x && x <= item.x + 50 && y >= item.y && y <= item.y + 50)
+      )
+    );
+  };
+
   const drawCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
@@ -26,7 +74,7 @@ const CanvasArea = ({ droppedItems, setDroppedItems }) => {
 
     // Load default image
     const defaultImg = new Image();
-    defaultImg.src = 'https://static.gettyimages.com/display-sets/creative-landing/images/GettyImages-2162612535.jpg'; // Replace with your default image URL
+    defaultImg.src = 'https://cdn.decrypt.co/wp-content/uploads/2023/05/dogecoin-doge-token-digital-rendering-gID_7.jpg'; // Replace with your default image URL
     defaultImg.onload = () => {
       context.drawImage(defaultImg, 0, 0, canvas.width, canvas.height); // Adjust position and size as needed
 
@@ -46,11 +94,18 @@ const CanvasArea = ({ droppedItems, setDroppedItems }) => {
   }, [drawCanvas]);
 
   return (
-    <div className="flex-1 flex justify-center items-center bg-gray-200" ref={drop}>
+    <div
+      className="flex-1 flex justify-center items-center bg-gray-200"
+      ref={drop}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onDoubleClick={handleDoubleClick}
+    >
       <canvas
         ref={canvasRef}
         width={800}
-        height={600}
+        height={800}
         className="border-2 border-gray-500 rounded-lg shadow-lg"
       ></canvas>
     </div>
