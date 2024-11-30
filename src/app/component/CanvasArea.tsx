@@ -121,7 +121,7 @@ const CanvasArea: React.FC<any> = ({ droppedItems, setDroppedItems }) => {
     // Load default person-like image
     const defaultImg = new Image();
     defaultImg.src = "https://i.ibb.co/tsj0rsT/bg.png"; // Replace with actual URL
-    defaultImg.crossOrigin = 'anonymous'; // This is important for CORS
+    // defaultImg.crossOrigin = 'anonymous'; // This is important for CORS
     
     defaultImg.onload = () => {
       context.drawImage(defaultImg, 0, 0, canvas.width, canvas.height);
@@ -130,7 +130,7 @@ const CanvasArea: React.FC<any> = ({ droppedItems, setDroppedItems }) => {
       droppedItems.forEach((item: any) => {
         const img = new Image();
         img.src = item.imageUrl;
-        img.crossOrigin = 'anonymous'; // This is important for CORS
+        // img.crossOrigin = 'anonymous'; // This is important for CORS
         img.onload = () => {
           context.save();
           context.globalAlpha = item.opacity;
@@ -180,7 +180,7 @@ const CanvasArea: React.FC<any> = ({ droppedItems, setDroppedItems }) => {
       </div>
       <div>
          {/* download the image of canvas */}
-       <button className="mt-4 p-2 bg-blue-500 text-white rounded-lg" onClick={()=>{
+       {/* <button className="mt-4 p-2 bg-blue-500 text-white rounded-lg" onClick={()=>{
           const canvas = canvasRef.current;
           if (!canvas) return;
           const link = document.createElement('a');
@@ -189,7 +189,7 @@ const CanvasArea: React.FC<any> = ({ droppedItems, setDroppedItems }) => {
           link.click();
        }}>
           Download Image
-        </button>
+        </button> */}
       </div>
       {selectedItem && (
         <div className="p-4 bg-white rounded-lg shadow-lg w-full md:w-1/3">
