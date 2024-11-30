@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { useDrop, XYCoord } from 'react-dnd';
+import BaseImage from "../../../public/bg.jpg"
 
 interface DroppedItem {
   id: string;
@@ -119,7 +120,7 @@ const CanvasArea: React.FC<any> = ({ droppedItems, setDroppedItems }) => {
 
     // Load default person-like image
     const defaultImg = new Image();
-    defaultImg.src = 'https://i.pinimg.com/474x/3d/b4/f1/3db4f1ba8d3ec63c6f051fc474e288ff.jpg'; // Replace with actual URL
+    defaultImg.src = "https://i.ibb.co/tsj0rsT/bg.png" // Replace with actual URL
     defaultImg.onload = () => {
       context.drawImage(defaultImg, 0, 0, canvas.width, canvas.height);
 
