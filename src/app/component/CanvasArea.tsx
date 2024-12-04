@@ -23,7 +23,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({ droppedItems, setDroppedItems }
   const [selectedItem, setSelectedItem] = useState<DroppedItem | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  const [, drop] = useDrop({
+  const [, drop]:any = useDrop({
     accept: 'character',
     drop: (item: DroppedItem, monitor) => {
       const offset: XYCoord | null = monitor.getClientOffset();
