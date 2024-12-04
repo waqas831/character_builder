@@ -12,7 +12,7 @@ const CanvasArea: React.FC = () => {
   const [selectedParts, setSelectedParts] = useState<DroppedItem[]>([]);
   const [finalCharacter, setFinalCharacter] = useState<DroppedItem[] | null>(null);
 
-  const [, drop] = useDrop({
+  const [, drop] :any= useDrop({
     accept: 'character',
     drop: (item: DroppedItem) => {
       setSelectedParts((prevParts) =>
@@ -26,7 +26,7 @@ const CanvasArea: React.FC = () => {
   });
 
   const assembleCharacter = () => {
-    const positions = {
+    const positions:any = {
       head: { x: 260, y: 50, width: 80, height: 80 },
     };
 
@@ -50,7 +50,7 @@ const CanvasArea: React.FC = () => {
 
     const itemsToDraw = finalCharacter || selectedParts;
 
-    itemsToDraw.forEach((item) => {
+    itemsToDraw.forEach((item:any) => {
       if (item.partType === 'head') {
         const img = new Image();
         img.src = item.imageUrl;
@@ -70,8 +70,8 @@ const CanvasArea: React.FC = () => {
             cropY,
             cropWidth,
             cropHeight,
-            item.x,
-            item.y,
+            item?.x,
+            item?.y,
             targetWidth,
             targetHeight
           );
