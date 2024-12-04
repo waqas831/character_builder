@@ -117,34 +117,20 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({ droppedItems, setDroppedItems }
 
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw dropped items
-    if (droppedItems.length > 0) {
-      droppedItems.forEach((item) => {
-        const img = new Image();
-        img.src = item.imageUrl;
-        img.onload = () => {
-          context.save();
-          context.globalAlpha = item.opacity;
-          context.translate(item.x + item.width / 2, item.y + item.height / 2);
-          context.rotate((item.rotate * Math.PI) / 180);
-          context.translate(-(item.x + item.width / 2), -(item.y + item.height / 2));
-          context.beginPath();
-          context.moveTo(item.x + item.borderRadius, item.y);
-          context.lineTo(item.x + item.width - item.borderRadius, item.y);
-          context.quadraticCurveTo(item.x + item.width, item.y, item.x + item.width, item.y + item.borderRadius);
-          context.lineTo(item.x + item.width, item.y + item.height - item.borderRadius);
-          context.quadraticCurveTo(item.x + item.width, item.y + item.height, item.x + item.width - item.borderRadius, item.y + item.height);
-          context.lineTo(item.x + item.borderRadius, item.y + item.height);
-          context.quadraticCurveTo(item.x, item.y + item.height, item.x, item.y + item.height - item.borderRadius);
-          context.lineTo(item.x, item.y + item.borderRadius);
-          context.quadraticCurveTo(item.x, item.y, item.x + item.borderRadius, item.y);
-          context.closePath();
-          context.clip();
-          context.drawImage(img, item.x, item.y, item.width, item.height);
-          context.restore();
-        };
-      });
-    }
+    // Draw dropped items in order
+    droppedItems.forEach((item, index) => {
+      const img = new Image();
+      img.src = item.imageUrl;
+      img.onload = () => {
+        context.save();
+        context.globalAlpha = item.opacity;
+        context.translate(item.x + item.width / 2, item.y + item.height / 2);
+        context.rotate((item.rotate * Math.PI) / 180);
+        context.translate(-(item.x + item.width / 2), -(item.y + item.height / 2));
+        context.drawImage(img, item.x, item.y, item.width, item.height);
+        context.restore();
+      };
+    });
   }, [droppedItems]);
 
   useEffect(() => {
