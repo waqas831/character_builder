@@ -15,10 +15,10 @@ interface DroppedItem {
 
 interface CanvasAreaProps {
   droppedItems: DroppedItem[];
-  setDroppedItems: React.Dispatch<React.SetStateAction<DroppedItem[]>>;
+  setDroppedItems: any;
 }
 
-const CanvasArea: React.FC<CanvasAreaProps> = ({ droppedItems, setDroppedItems }) => {
+const CanvasArea: React.FC<CanvasAreaProps | any> = ({ droppedItems, setDroppedItems }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [selectedItem, setSelectedItem] = useState<DroppedItem | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -32,7 +32,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({ droppedItems, setDroppedItems }
         const rect = canvas.getBoundingClientRect();
         const x = offset.x - rect.left;
         const y = offset.y - rect.top;
-        setDroppedItems((prevItems) => [
+        setDroppedItems((prevItems:any) => [
           ...prevItems,
           { ...item, x, y, width: 80, height: 80, borderRadius: 0, opacity: 1, rotate: 0 },
         ]);
@@ -49,7 +49,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({ droppedItems, setDroppedItems }
     const y = e.clientY - rect.top;
 
     const item = droppedItems.find(
-      (item) => x >= item.x && x <= item.x + item.width && y >= item.y && y <= item.y + item.height
+      (item:any) => x >= item.x && x <= item.x + item.width && y >= item.y && y <= item.y + item.height
     );
 
     if (item) {
@@ -70,8 +70,8 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({ droppedItems, setDroppedItems }
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    setDroppedItems((prevItems) =>
-      prevItems.map((item) =>
+    setDroppedItems((prevItems:any) =>
+      prevItems.map((item:any) =>
         item.id === selectedItem.id ? { ...item, x, y } : item
       )
     );
@@ -89,9 +89,9 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({ droppedItems, setDroppedItems }
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    setDroppedItems((prevItems) =>
+    setDroppedItems((prevItems:any) =>
       prevItems.filter(
-        (item) => !(x >= item.x && x <= item.x + item.width && y >= item.y && y <= item.y + item.height)
+        (item:any) => !(x >= item.x && x <= item.x + item.width && y >= item.y && y <= item.y + item.height)
       )
     );
   };
@@ -100,8 +100,8 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({ droppedItems, setDroppedItems }
     if (!selectedItem) return;
 
     const { name, value } = e.target;
-    setDroppedItems((prevItems) =>
-      prevItems.map((item) =>
+    setDroppedItems((prevItems:any) =>
+      prevItems.map((item:any) =>
         item.id === selectedItem.id ? { ...item, [name]: parseFloat(value) } : item
       )
     );
@@ -118,7 +118,7 @@ const CanvasArea: React.FC<CanvasAreaProps> = ({ droppedItems, setDroppedItems }
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw dropped items in order
-    droppedItems.forEach((item, index) => {
+    droppedItems.forEach((item:any, index:any) => {
       const img = new Image();
       img.src = item.imageUrl;
       img.onload = () => {
