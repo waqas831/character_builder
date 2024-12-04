@@ -15,15 +15,15 @@ interface DroppedItem {
 
 interface CanvasAreaProps {
   droppedItems: DroppedItem[];
-  setDroppedItems: any;
+  setDroppedItems: React.Dispatch<React.SetStateAction<DroppedItem[]>>;
 }
 
-const CanvasArea: React.FC<CanvasAreaProps | any> = ({ droppedItems, setDroppedItems }) => {
+const CanvasArea: React.FC<CanvasAreaProps> = ({ droppedItems, setDroppedItems }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [selectedItem, setSelectedItem] = useState<DroppedItem | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  const [, drop]:any = useDrop({
+  const [, drop] = useDrop({
     accept: 'character',
     drop: (item: DroppedItem, monitor) => {
       const offset: XYCoord | null = monitor.getClientOffset();
@@ -32,7 +32,7 @@ const CanvasArea: React.FC<CanvasAreaProps | any> = ({ droppedItems, setDroppedI
         const rect = canvas.getBoundingClientRect();
         const x = offset.x - rect.left;
         const y = offset.y - rect.top;
-        setDroppedItems((prevItems:any) => [
+        setDroppedItems((prevItems) => [
           ...prevItems,
           { ...item, x, y, width: 80, height: 80, borderRadius: 0, opacity: 1, rotate: 0 },
         ]);
@@ -49,7 +49,7 @@ const CanvasArea: React.FC<CanvasAreaProps | any> = ({ droppedItems, setDroppedI
     const y = e.clientY - rect.top;
 
     const item = droppedItems.find(
-      (item:any) => x >= item.x && x <= item.x + item.width && y >= item.y && y <= item.y + item.height
+      (item) => x >= item.x && x <= item.x + item.width && y >= item.y && y <= item.y + item.height
     );
 
     if (item) {
@@ -70,8 +70,8 @@ const CanvasArea: React.FC<CanvasAreaProps | any> = ({ droppedItems, setDroppedI
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    setDroppedItems((prevItems:any) =>
-      prevItems.map((item:any) =>
+    setDroppedItems((prevItems) =>
+      prevItems.map((item) =>
         item.id === selectedItem.id ? { ...item, x, y } : item
       )
     );
@@ -89,9 +89,9 @@ const CanvasArea: React.FC<CanvasAreaProps | any> = ({ droppedItems, setDroppedI
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    setDroppedItems((prevItems:any) =>
+    setDroppedItems((prevItems) =>
       prevItems.filter(
-        (item:any) => !(x >= item.x && x <= item.x + item.width && y >= item.y && y <= item.y + item.height)
+        (item) => !(x >= item.x && x <= item.x + item.width && y >= item.y && y <= item.y + item.height)
       )
     );
   };
@@ -100,8 +100,8 @@ const CanvasArea: React.FC<CanvasAreaProps | any> = ({ droppedItems, setDroppedI
     if (!selectedItem) return;
 
     const { name, value } = e.target;
-    setDroppedItems((prevItems:any) =>
-      prevItems.map((item:any) =>
+    setDroppedItems((prevItems) =>
+      prevItems.map((item) =>
         item.id === selectedItem.id ? { ...item, [name]: parseFloat(value) } : item
       )
     );
@@ -118,7 +118,7 @@ const CanvasArea: React.FC<CanvasAreaProps | any> = ({ droppedItems, setDroppedI
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw dropped items in order
-    droppedItems.forEach((item:any, index:any) => {
+    droppedItems.forEach((item, index) => {
       const img = new Image();
       img.src = item.imageUrl;
       img.onload = () => {
@@ -127,6 +127,13 @@ const CanvasArea: React.FC<CanvasAreaProps | any> = ({ droppedItems, setDroppedI
         context.translate(item.x + item.width / 2, item.y + item.height / 2);
         context.rotate((item.rotate * Math.PI) / 180);
         context.translate(-(item.x + item.width / 2), -(item.y + item.height / 2));
+        
+        // Create a mask to remove the background
+        context.beginPath();
+        context.arc(item.x + item.width / 2, item.y + item.height / 2, item.width / 2, 0, Math.PI * 2);
+        context.closePath();
+        context.clip();
+
         context.drawImage(img, item.x, item.y, item.width, item.height);
         context.restore();
       };
