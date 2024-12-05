@@ -10,12 +10,16 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
+    "canvas": "^2.11.2",
     "fs": "^0.0.1-security",
+    "konva": "^9.3.16",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "react-dom": "19.0.0-rc-66855b96-20241106"
+    "react-dom": "19.0.0-rc-66855b96-20241106",
+    "react-konva": "^18.2.10",
+    "use-image": "^1.1.1"
   },
   "devDependencies": {
     "@types/node": "^20",
